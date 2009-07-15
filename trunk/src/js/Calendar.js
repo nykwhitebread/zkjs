@@ -66,7 +66,7 @@ String.prototype.toDate = function(pattern,monthNames,monthNamesShort) {
 	if (match!=null)
 	{
 		var yy = parseInt(match[y],10); if (isNaN(yy)) return null; else if (yy<70) yy+=2000; else if (yy<100) yy+=1900;
-		var mm = parseInt(match[m],10); if (isNaN(mm)) mm = COJS.Calendar.getMonthByLabel(match[m], shortLabel ? monthNamesShort : monthNames); else if (--mm<0 || mm>11) return null;
+		var mm = parseInt(match[m],10); if (isNaN(mm)) mm = Calendar.getMonthByLabel(match[m], shortLabel ? monthNamesShort : monthNames); else if (--mm<0 || mm>11) return null;
 		var dd = parseInt(match[d],10); if (isNaN(dd) || dd<1 || dd>daysInMonth(yy, mm)) return null;
 
 		// time parsing
@@ -846,5 +846,13 @@ Calendar.language = {
 	"close":"close",
 	"ok":"confirm"
 };
+
+Calendar.getMonthByLabel = function (monthLabel, monthNames)
+{
+	var i=0;
+	while (i<monthNames.length) if (monthNames[i]==monthLabel) return i; else i++;
+};
+
+
 
 window.CALENDAR = new Calendar();
