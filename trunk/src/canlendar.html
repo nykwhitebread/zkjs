@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<title>Canlendar</title>
+
+		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+		<meta http-equiv="description" content="this is my page">
+		<meta http-equiv="content-type"
+			content="text/html; charset=ISO-8859-1">
+
+		<link rel="stylesheet" type="text/css" href="css/demo.css">
+		<link rel="stylesheet" type="text/css" href="js/ui_zk/css/base.css">
+		<link rel="stylesheet" type="text/css" href="js/ui_zk/css/combobox.css">
+		<link rel="stylesheet" type="text/css" href="js/ui_zk/css/canlendar.css">
+
+		<script type="text/javascript" src="js/ui_zk/zk.base.js"></script>
+		<script type="text/javascript" src="js/ui_zk/zk.combobox.js"></script>
+		<script type="text/javascript" src="js/ui_zk/zk.canlendar.js"></script>
+		<script type="text/javascript">		
+			var dp;
+			function go(el,fmt){	
+				dp.hide();			
+				dp.dateFormatStyle=fmt;
+				dp.show({to:el});
+			}
+			
+			zk.ok(function(){
+				zk.console=zk.get('logs');
+				dp = new zk.Calendar();								
+			});
+		</script>
+	</head>
+
+	<body>
+		<input type="text" id="cont" onclick="go(this,'yy-MM-dd');">yy-MM-dd<br>
+		<select>
+			<option>1
+			<option>2
+		</select><br>
+		<input type="text" value="2009-09-25"  onclick="go(this,'yyyy-MM-dd');" >yyyy-MM-dd<br>
+		<input type="text"  onclick="go(this,'MM-dd-yy');">MM-dd-yy<br>		
+		<input type="text"  onclick="go(this,'yy-MM-dd hh:mm a');">yy-MM-dd hh:mm a<br>
+		<input type="text"  onclick="go(this,'yy-MM-dd HH:mm');">yy-MM-dd HH:mm<br>
+		<textarea id='logs' rows="20" cols="50"></textarea>
+	</body>
+</html>

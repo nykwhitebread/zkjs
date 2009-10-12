@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<title>combobox</title>
+
+		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+		<meta http-equiv="description" content="this is my page">
+		<meta http-equiv="content-type"
+			content="text/html; charset=ISO-8859-1">
+
+		<link rel="stylesheet" type="text/css" href="css/demo.css">
+		<link rel="stylesheet" type="text/css" href="js/ui_zk/css/base.css">
+		<link rel="stylesheet" type="text/css"
+			href="js/ui_zk/css/combobox.css">
+
+		<script type="text/javascript" src="js/ui_zk/zk.base.js"></script>
+		<script type="text/javascript" src="js/ui_zk/zk.combobox.js"></script>
+		<script type="text/javascript">
+				function log(txt){
+					zk.get('logs').value+=txt+'\n';
+				}	
+				function normal(){
+					var comp = new zk.ComboBox({"to":zk.get("cont1"),width:200,dropsize:5});
+					comp.addItem({text:"0",value:"0"});				
+					comp.addItem({text:"1",value:"1"});
+					comp.addItem({text:"2",value:"2"});
+					comp.addItem({text:"3",value:"3"});
+					comp.addItem({text:"4",value:"4"});
+					comp.addItem({text:"5",value:"5"});
+					comp.addItem({text:"6",value:"6"});				
+					comp.addItem({text:"7",value:"7"});
+					comp.addItem({text:"8",value:"8"});
+					comp.addItem({text:"9",value:"9"});
+					comp.addItem({text:"10",value:"10"});
+					comp.addItem({text:"11",value:"11"});
+					
+					zk.oe(comp,'selectChanged',function(e){
+						//the src is just the comp
+						var esrc=e.src;
+						log('selectChanged:old select item is ' + (esrc.oldselectItem?esrc.oldselectItem.text:'null') + ' and the new select item is ' + comp.selectItem.text);
+					});
+					zk.oe(comp,'dropdown',function(e){
+						//the src is just the comp
+						var esrc=e.src;
+						log('dropdown');
+						//as you see,this is good for lazy load dropdownlist						
+						//esrc.removeAll();
+						var count=esrc.getCount();
+						esrc.addItem({text:"d"+esrc.getCount(),value:"d"+esrc.getCount()});
+					});														
+				}
+				
+				function editable(){
+					var comp = new zk.ComboBox({"to":zk.get("cont2"),width:200});
+					comp.addItem({text:"0",value:"0"});				
+					comp.addItem({text:"1",value:"1"});
+					comp.addItem({text:"2",value:"2"});
+					comp.setEditable(true);
+					comp.setSearchable(true);
+					
+					//this event maybe useful for validation,I am not sure.
+					zk.oe(comp,'editfinished',function(e){
+						var esrc=e.src;
+						log('editfinished,edit value is ' + esrc.getEditValue());
+					});
+				}
+				
+				/**
+					note:if the items's count is less than 10,the search function will not work,
+					because 10 items has no need to search
+				*/
+				function onlysearchable(){
+					var comp = new zk.ComboBox({"to":zk.get("cont3"),width:200});
+					comp.addItem({text:"0",value:"0"});				
+					comp.addItem({text:"1",value:"1"});
+					comp.addItem({text:"2",value:"2"});
+					comp.addItem({text:"3",value:"2"});
+					comp.addItem({text:"4",value:"2"});
+					comp.addItem({text:"5",value:"2"});
+					comp.addItem({text:"6",value:"0"});				
+					comp.addItem({text:"7",value:"1"});
+					comp.addItem({text:"8",value:"2"});
+					comp.addItem({text:"9",value:"2"});
+					comp.addItem({text:"10",value:"2"});
+					comp.addItem({text:"11",value:"2"});					
+					comp.setEditable(false);
+					comp.setSearchable(true);
+				}
+				
+				function icons(){
+					var comp = new zk.ComboBox({"to":zk.get("cont4"),width:200,imageable:true});
+					comp.addItem({text:"0",value:"0",icon:'images/save.gif'});				
+					comp.addItem({text:"1",value:"1",icon:'images/save.gif'});
+					comp.addItem({text:"2",value:"2",icon:'images/save.gif'});					
+					comp.addItem({text:"3",value:"3",iconCls:'demoicon'});
+					comp.setEditable(true);
+					comp.setSearchable(true);
+				}
+				
+				function disable(){
+					var comp = new zk.ComboBox({"to":zk.get("cont5"),width:200,imageable:true});
+					comp.addItem({text:"0",value:"0",icon:'images/save.gif'});				
+					comp.addItem({text:"1",value:"1",icon:'images/save.gif'});
+					comp.addItem({text:"2",value:"2",icon:'images/save.gif'});
+					comp.setSelectValue('1');					
+					comp.setEnable(false);
+				}
+				
+				zk.ok(function(){
+					normal();
+					editable();
+					onlysearchable();
+					icons();
+					disable();
+				});
+		</script>
+	</head>
+
+	<body>
+		normal
+		<span id="cont1"></span>
+		<br>
+		editable
+		<span id="cont2"></span>
+		<br>
+		onlysearchable
+		<span id="cont3"></span>
+		<br>
+		icons
+		<span id="cont4"></span>
+		<br>
+		disable
+		<span id="cont5"></span>
+		<br>
+		events for normal:
+		<textarea id='logs' rows="20" cols="50"></textarea>
+	</body>
+</html>
