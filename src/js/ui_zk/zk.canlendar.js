@@ -865,9 +865,11 @@ zk.Calendar = function(ops) {
 				zk.setCss(intputHM, 'zk_calendar_hm');
 				intputHM.maxLength = 5;
 			}
-			intputHM.style.display = "";
+			intputHM.style.display = '';
+			inputTd.style.display = '';
 		} else {
-			intputHM.style.display = "none";
+			intputHM.style.display = 'none';
+			inputTd.style.display = 'none';
 		}
 
 		if (!_setYearValue(calendar.date.getFullYear())) {
