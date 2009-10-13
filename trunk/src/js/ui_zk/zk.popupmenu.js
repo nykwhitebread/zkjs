@@ -82,11 +82,12 @@ zk.MenuItem = function (ops){
  * @configbegin
  * @width:width of the menuitem in this popupmenu
  * @height:height of the menuitem in this popupmenu
+ * @maxtextlength:the max length of the menuitem's text,
  * @configend
  */
 zk.PopupMenu = function (ops){
 	if (!ops) ops = {};
-	var MAXTEXTLENGTH = 12;
+	var MAXTEXTLENGTH = ops.maxtextlength?ops.maxtextlength:24;
 	//the style of the table
 	var TBSTYLE = "font-size:9pt;border-collapse:collapse;table-layout:fixed;";
 	var STYLE_TXTCELL = "height:24;padding-left:5;width:100%;";
@@ -138,7 +139,7 @@ zk.PopupMenu = function (ops){
 		itemtable.cellPadding = "0";
 		itemtable.cellSpaceing = "0";		
 		itemtable.style.cssText = TBSTYLE;
-		if (!zk.browser.chrome){
+		if (!(zk.browser.chrome || zk.browser.safari )){
 			itemtable.style.border='1px solid black';			
 		}
 		itemtable.style.width =	pom.itmwidth + MARGIN;
@@ -201,7 +202,7 @@ zk.PopupMenu = function (ops){
 			}	
 			txt = argItem.caption.toString();
 			if (txt && txt.split(STRING_EMPTY).length>MAXTEXTLENGTH) {
-				txt = txt.substring(0,MAXTEXTLENGTH-1)+"..."
+				txt = txt.substring(0,MAXTEXTLENGTH-2)+"..."
 			}		
 			txtcell.innerHTML = txt;
 		}else{
@@ -332,7 +333,7 @@ zk.PopupMenu = function (ops){
 		t = t + "px";	
 		
 		//for chrome,the right boder of the table is unvisible,but border of layer is visible
-		if (zk.browser.chrome){
+		if (zk.browser.chrome || zk.browser.safari){
 			zk.setStyle(layer,'border:1px solid black');
 		}		
 		layer.style.background='buttonface';
