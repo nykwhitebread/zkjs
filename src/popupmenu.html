@@ -33,6 +33,9 @@
 					}
 					window.contmenu.removeitemAll();
 					var item = new zk.MenuItem({text:'1',iconCls:'demoicon'});
+					zk.oe(item,'click',function(e){
+						alert('click');
+					});
 					window.contmenu.additem(item);
 					
 					//add item dynamicly

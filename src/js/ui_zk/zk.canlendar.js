@@ -210,7 +210,7 @@ Date.prototype.format = function(pattern, monthNames, monthNamesShort) {
 zk.Calendar = function(ops) {
 	if (!ops) {
 		ops = {};
-	}
+	}	
 	var calendar = this;
 
 	var panlCanl;
@@ -243,7 +243,18 @@ zk.Calendar = function(ops) {
 	this.beginYear = tdate.getFullYear() - 50;
 	this.endYear = tdate.getFullYear() + 50;
 	this.dateFormatStyle = ops.dateformat ? ops.dateformat : "yyyy-MM-dd HH:mm";
-
+	
+	function confirmHandle() {
+			if (seltd && calendar.dateControl != null) {
+				_setValue(new Date(calendar.date.getFullYear(), calendar.date
+								.getMonth(), seltd.data, calendar.date
+								.getHours(), calendar.date.getMinutes())
+						.format(calendar.dateFormatStyle));
+			}
+			calendar.hide();
+			return false;
+		};
+	
 	var _create = function() {
 		panlCanl = zk.cr("div");
 		panlCanl.style.display = "none";
@@ -251,8 +262,8 @@ zk.Calendar = function(ops) {
 		document.body.appendChild(panlCanl);
 
 		return panlCanl;
-	};
-
+	};	
+	
 	var _setYearValue = function(argValue) {
 		var index;
 		var item;
@@ -280,7 +291,7 @@ zk.Calendar = function(ops) {
 			if (!_tds[i].data) {
 				return;
 			}
-			_refeshCell(_tds[i]);
+			_refreshCell(_tds[i]);
 
 			if (curtd) {
 				curtd.style.backgroundColor = calendar.colors["cur_bg"];
@@ -293,12 +304,16 @@ zk.Calendar = function(ops) {
 			_tds[i].onclick = function() {
 				if (this.data == "&nbsp;" || this.data == STRING_EMPTY) {
 					return;
-				}
-				_refeshCell(seltd);
+				}	
+				_refreshCell(seltd);
 				if (seltd == curtd && curtd) {
 					curtd.style.backgroundColor = calendar.colors["cur_bg"];
 				}
 				seltd = this;
+				if (!_isShowhm()){
+					confirmHandle();
+					return;
+				}
 				seltd.style.backgroundColor = calendar.colors["sel_bg"]
 			}
 			_tds[i].onmouseover = function() {
@@ -317,12 +332,12 @@ zk.Calendar = function(ops) {
 				if (seltd == this || curtd == this) {
 					return;
 				}
-				_refeshCell(this);
+				_refreshCell(this);
 			}
 		}
 	};
 
-	var _refeshCell = function(argCell) {
+	var _refreshCell = function(argCell) {
 		if (!argCell) {
 			return;
 		}
@@ -331,8 +346,8 @@ zk.Calendar = function(ops) {
 	};
 
 	var _refresh = function() {
-		_refeshCell(seltd);
-		_refeshCell(curtd);
+		_refreshCell(seltd);
+		_refreshCell(curtd);
 		seltd = curtd = null;
 		calendar.changeSelect();
 		calendar.bindData();
@@ -414,7 +429,7 @@ zk.Calendar = function(ops) {
 		var e = "not valide";
 		var v = false;
 		var hm = intputHM.value;
-
+		
 		if (_isShowap()) {
 			if (7 != hm.length) {
 			} else {
@@ -668,9 +683,9 @@ zk.Calendar = function(ops) {
 
 		clearTd.appendChild(btnClear);
 		todayTd.appendChild(btnToday);
-		okTd.appendChild(btnConfirm);
+		okTd.appendChild(btnConfirm);				
 		closeTd.appendChild(btnClose);
-
+		
 		btnClear.onclick = function() {
 			_setValue(STRING_EMPTY);
 			calendar.hide();
@@ -688,23 +703,19 @@ zk.Calendar = function(ops) {
 			calendar.hide();
 			return false;
 		};
-
-		btnConfirm.onclick = function() {
-			if (seltd && calendar.dateControl != null) {
-				_setValue(new Date(calendar.date.getFullYear(), calendar.date
-								.getMonth(), seltd.data, calendar.date
-								.getHours(), calendar.date.getMinutes())
-						.format(calendar.dateFormatStyle));
-			}
-			calendar.hide();
-			return false;
-		};
+		btnConfirm.onclick = confirmHandle;
 
 		intputHM.onblur = function() {
 			intputHM.value = intputHM.value.toUpperCase();
 			var ve = _valideHM();
 			if (!ve.v) {
-				intputHM.focus();
+				try{
+					//maybe the intputHM is unvisible
+					intputHM.focus();
+				}catch(e){
+					//do nothing
+				}
+				zk.fire(calendar,'inputhmerror',{error:ve.e,value:intputHM.value});
 
 				return false;
 			}
@@ -843,6 +854,7 @@ zk.Calendar = function(ops) {
 	/**
 	 * @configbegin
 	 * @to the textbox element to bind
+	 * @showbuttons show the clear,tody,close buttons,the confirm buttons's visibility is determined by the dateformat(if it contain hm) 
 	 * @configend
 	 */
 	this.show = function(ops) {
@@ -867,9 +879,17 @@ zk.Calendar = function(ops) {
 			}
 			intputHM.style.display = '';
 			inputTd.style.display = '';
+			okTd.style.display = '';
+			btnTb.style.display = '';
 		} else {
 			intputHM.style.display = 'none';
 			inputTd.style.display = 'none';
+			okTd.style.display = 'none';
+			if (!ops.showbuttons){
+				btnTb.style.display = 'none';
+			}else{
+				btnTb.style.display = '';
+			}
 		}
 
 		if (!_setYearValue(calendar.date.getFullYear())) {
