@@ -223,6 +223,7 @@ zk.PopupMenu = function (ops){
 		
 	var m_click = function (argRow,argItem){
 		if (argItem.enable) {			
+			zk.fire(argItem,'click');
 			zk.fire(argItem.topmenu,'click',{item:argItem});
 		}		
 //		pom.hide(true);
